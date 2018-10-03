@@ -24,11 +24,16 @@ import java.util.Map;
 
 public class RNMancasSnowboyModule extends ReactContextBaseJavaModule {
 
+  private static final String TAG = RNMancasSnowboyModule.class.getSimpleName();
   private final ReactApplicationContext reactContext;
+  private static final String DEFAULT_SAMPLE_RATE = "DEFAULT_SAMPLE_RATE";
+  private RecordingThread recordingThread;
 
   public RNMancasSnowboyModule(ReactApplicationContext reactContext) {
     super(reactContext);
     this.reactContext = reactContext;
+
+    AppResCopy.copyResFromAssetsToSD(reactContext);
   }
 
   @Override
@@ -39,7 +44,7 @@ public class RNMancasSnowboyModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void er(Promise promise) {
+  public void initHotword(Promise promise) {
     if (ActivityCompat.checkSelfPermission(reactContext,
         Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
       try {
