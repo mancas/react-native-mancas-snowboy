@@ -29,12 +29,20 @@ public class RNMancasSnowboyModule extends ReactContextBaseJavaModule {
   private static final String DEFAULT_SAMPLE_RATE = "DEFAULT_SAMPLE_RATE";
   private static final String DEFAULT_SENSITIVITY = "DEFAULT_SENSITIVITY";
   private RecordingThread recordingThread;
+  private MediaPlayer player = new MediaPlayer();
 
   public RNMancasSnowboyModule(ReactApplicationContext reactContext) {
     super(reactContext);
     this.reactContext = reactContext;
 
     AppResCopy.copyResFromAssetsToSD(reactContext);
+
+    try {
+      player.setDataSource(strEnvWorkSpace + "googlestart.wav");
+      player.prepare();
+    } catch (IOException e) {
+      Log.e(TAG, "Playing googlestart sound error", e);
+    }
   }
 
   @Override
@@ -90,6 +98,7 @@ public class RNMancasSnowboyModule extends ReactContextBaseJavaModule {
       MsgEnum message = MsgEnum.getMsgEnum(msg.what);
       switch (message) {
       case MSG_ACTIVE:
+        playNotificationSound();
         sendEvent("HOTWORD_DETECTED", null);
         break;
       case MSG_INFO:
@@ -113,6 +122,10 @@ public class RNMancasSnowboyModule extends ReactContextBaseJavaModule {
 
   private void sendEvent(String eventName, @Nullable WritableMap params) {
     reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, params);
+  }
+
+  private void playNotificationSound() {
+    player.start();
   }
 
   @Override
