@@ -21,18 +21,18 @@ public class RecordingThread {
     private boolean shouldContinue;
     private Handler handler = null;
     private Thread thread;
-    
+
     private SnowboyDetect detector;
 
     private static String strEnvWorkSpace = Constants.DEFAULT_WORK_SPACE;
 
-    public RecordingThread(Handler handler) {
+    public RecordingThread(String sensitivity, Handler handler) {
         this.handler = handler;
         String activeModel = strEnvWorkSpace + Constants.ACTIVE_UMDL;
         String commonRes = strEnvWorkSpace + Constants.ACTIVE_RES;
         detector = new SnowboyDetect(commonRes, activeModel);
 
-        detector.SetSensitivity("0.6");
+        detector.SetSensitivity(sensitivity);
         detector.SetAudioGain(1);
         detector.ApplyFrontend(true);
     }
