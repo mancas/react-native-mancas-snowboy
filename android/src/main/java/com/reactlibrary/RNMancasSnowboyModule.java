@@ -27,6 +27,7 @@ public class RNMancasSnowboyModule extends ReactContextBaseJavaModule {
   private static final String TAG = RNMancasSnowboyModule.class.getSimpleName();
   private final ReactApplicationContext reactContext;
   private static final String DEFAULT_SAMPLE_RATE = "DEFAULT_SAMPLE_RATE";
+  private static final String DEFAULT_SENSITIVITY = "DEFAULT_SENSITIVITY";
   private RecordingThread recordingThread;
 
   public RNMancasSnowboyModule(ReactApplicationContext reactContext) {
@@ -40,15 +41,16 @@ public class RNMancasSnowboyModule extends ReactContextBaseJavaModule {
   public Map<String, Object> getConstants() {
     final Map<String, Object> constants = new HashMap<>();
     constants.put(DEFAULT_SAMPLE_RATE, Constants.DEFAULT_SAMPLE_RATE);
+    constants.put(DEFAULT_SENSITIVITY, Constants.DEFAULT_SENSITIVITY);
     return constants;
   }
 
   @ReactMethod
-  public void initHotword(Promise promise) {
+  public void initHotword(String sensitivity, Promise promise) {
     if (ActivityCompat.checkSelfPermission(reactContext,
         Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
       try {
-        this.recordingThread = new RecordingThread(handle);
+        this.recordingThread = new RecordingThread(sensitivity, handle);
         promise.resolve(true);
       } catch (Exception e) {
         String errorMessage = e.getMessage();
